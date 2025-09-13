@@ -1,29 +1,29 @@
 <?php
 
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
 new #[Layout('components.layouts.auth')] class extends Component {
-    public string $name = '';
-    public string $email = '';
-    public string $password = '';
-    public string $password_confirmation = '';
     public string $address = '';
     public string $phone = '';
     public string $province = '';
     public string $city = '';
     public array $cities = [];
-
+    
     public function mount(): void
     {
-        $this->cities = [];
+        $this->address = Auth::user()->address ?? '';
+        $this->phone = Auth::user()->phone ?? '';
+        $this->province = Auth::user()->province ?? '';
+        $this->city = Auth::user()->city ?? '';
+        
+        if (!empty($this->province)) {
+            $this->cities = config('ecuador.provinces')[$this->province] ?? [];
+        }
     }
-
+    
     public function updatedProvince($value): void
     {
         if (!empty($value)) {
@@ -33,66 +33,30 @@ new #[Layout('components.layouts.auth')] class extends Component {
             $this->cities = [];
         }
     }
-
-    /**
-     * Handle an incoming registration request.
-     */
-    public function register(): void
+    
+    public function completeProfile(): void
     {
         $validated = $this->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
             'address' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:20'],
             'province' => ['required', 'string', 'in:' . implode(',', array_keys(config('ecuador.provinces')))],
             'city' => ['required', 'string'],
         ]);
-
-        event(new Registered($user = User::create([
-            'name' => $this->name,
-            'email' => $this->email,
-            'password' => Hash::make($this->password),
-            'address' => $this->address,
-            'phone' => $this->phone,
-            'province' => $this->province,
-            'city' => $this->city,
-        ])));
-
-        Auth::login($user, true); // Añadir true para generar remember_token
-
+        
+        $user = Auth::user();
+        $user->fill($validated);
+        $user->save();
+        
+        session()->forget('needs_profile_completion');
+        
         $this->redirectIntended(route('dashboard', absolute: false), navigate: true);
     }
 }; ?>
 
 <div class="flex flex-col gap-6">
-    <x-auth-header :title="__('Create an account')" :description="__('Enter your details below to create your account')" />
+    <x-auth-header :title="__('Complete your profile')" :description="__('Please provide the following information to complete your registration')" />
 
-    <!-- Session Status -->
-    <x-auth-session-status class="text-center" :status="session('status')" />
-
-    <form method="POST" wire:submit="register" class="flex flex-col gap-6">
-        <!-- Name -->
-        <flux:input
-            wire:model="name"
-            :label="__('Name')"
-            type="text"
-            required
-            autofocus
-            autocomplete="name"
-            :placeholder="__('Full name')"
-        />
-
-        <!-- Email Address -->
-        <flux:input
-            wire:model="email"
-            :label="__('Email address')"
-            type="email"
-            required
-            autocomplete="email"
-            placeholder="email@example.com"
-        />
-
+    <form wire:submit="completeProfile" class="flex flex-col gap-6">
         <!-- Address -->
         <flux:input
             wire:model="address"
@@ -148,37 +112,10 @@ new #[Layout('components.layouts.auth')] class extends Component {
             @error('city') <span class="text-sm text-red-600 dark:text-red-400">{{ $message }}</span> @enderror
         </div>
 
-        <!-- Password -->
-        <flux:input
-            wire:model="password"
-            :label="__('Password')"
-            type="password"
-            required
-            autocomplete="new-password"
-            :placeholder="__('Password')"
-            viewable
-        />
-
-        <!-- Confirm Password -->
-        <flux:input
-            wire:model="password_confirmation"
-            :label="__('Confirm password')"
-            type="password"
-            required
-            autocomplete="new-password"
-            :placeholder="__('Confirm password')"
-            viewable
-        />
-
         <div class="flex items-center justify-end">
             <flux:button type="submit" variant="primary" class="w-full">
-                {{ __('Create account') }}
+                {{ __('Complete Profile') }}
             </flux:button>
         </div>
     </form>
-
-    <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
-        <span>{{ __('Already have an account?') }}</span>
-        <flux:link :href="route('login')" wire:navigate>{{ __('Log in') }}</flux:link>
-    </div>
 </div>
