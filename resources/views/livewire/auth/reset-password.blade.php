@@ -35,7 +35,19 @@ new #[Layout('components.layouts.auth')] class extends Component {
         $this->validate([
             'token' => ['required'],
             'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+            'password' => [
+                'required', 
+                'string', 
+                'confirmed', 
+                Rules\Password::defaults(),
+                function ($attribute, $value, $fail) {
+                    // Buscar el usuario por email para validar contraseña
+                    $user = \App\Models\User::where('email', $this->email)->first();
+                    if ($user && Hash::check($value, $user->password)) {
+                        $fail(__('The new password must be different from your current password.'));
+                    }
+                }
+            ],
         ]);
 
         // Here we will attempt to reset the user's password. If it is successful we
@@ -82,6 +94,9 @@ new #[Layout('components.layouts.auth')] class extends Component {
             type="email"
             required
             autocomplete="email"
+            readonly
+            class="bg-gray-50 text-gray-500"
+            :description="__('This email cannot be modified for security reasons')"
         />
 
         <!-- Password -->

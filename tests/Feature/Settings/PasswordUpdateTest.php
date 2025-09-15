@@ -37,3 +37,19 @@ test('correct password must be provided to update password', function () {
 
     $response->assertHasErrors(['current_password']);
 });
+
+test('new password must be different from current password', function () {
+    $user = User::factory()->create([
+        'password' => Hash::make('password'),
+    ]);
+
+    $this->actingAs($user);
+
+    $response = Volt::test('settings.password')
+        ->set('current_password', 'password')
+        ->set('password', 'password') // misma contraseña
+        ->set('password_confirmation', 'password')
+        ->call('updatePassword');
+
+    $response->assertHasErrors(['password']);
+});
