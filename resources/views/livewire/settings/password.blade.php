@@ -6,10 +6,20 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 use Livewire\Volt\Component;
 
-new class extends Component {
+new class extends Component
+{
     public string $current_password = '';
     public string $password = '';
     public string $password_confirmation = '';
+
+    public function mount(): void
+    {
+        // Redirigir si el usuario usa OAuth
+        if (Auth::user()->oauth_provider) {
+            $this->redirect(route('settings.profile'), navigate: true);
+            session()->flash('warning', 'El cambio de contraseña no está disponible para cuentas vinculadas a Google.');
+        }
+    }
 
     /**
      * Update the password for the currently authenticated user.

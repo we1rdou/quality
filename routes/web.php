@@ -2,21 +2,45 @@
 
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+// Rutas para autenticación con Google
+Route::get('/auth/google', [App\Http\Controllers\SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [App\Http\Controllers\SocialAuthController::class, 'handleGoogleCallback']);
 
-Route::middleware(['auth'])->group(function () {
+// Rutas para completar perfil (requiere autenticación pero no verificación)
+Route::get('/profile/complete', App\Livewire\Profile\Complete::class)
+    ->middleware(['auth'])
+    ->name('profile.complete');
+
+// Todas las rutas protegidas que requieren autenticación, verificación de email Y perfil completo
+Route::middleware(['auth', 'verified', 'profile.complete'])->group(function () {
+    // Dashboard
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+    
+    // Rutas de configuración
     Route::redirect('settings', 'settings/profile');
-
     Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
-    Volt::route('settings/password', 'settings.password')->name('settings.password');
+    
+    // Ruta de contraseña modificada - solo para usuarios con registro normal
+    Route::get('/settings/password', function () {
+        if (Auth::user()->oauth_provider) {
+            return redirect()->route('settings.profile')
+                ->with('warning', 'El cambio de contraseña no está disponible para cuentas vinculadas a Google.');
+        }
+        
+        return view('livewire.settings.password');
+    })->name('settings.password');
+    
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
+    
+    // Otras rutas protegidas...
 });
 
 require __DIR__.'/auth.php';

@@ -33,3 +33,10 @@ Route::middleware('auth')->group(function () {
 
 Route::post('logout', App\Livewire\Actions\Logout::class)
     ->name('logout');
+
+return [
+    'verification' => [
+        'expire' => 60, // minutos
+        'throttle' => 6, // número máximo de envíos
+    ],
+];

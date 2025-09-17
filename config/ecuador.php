@@ -1,0 +1,30 @@
+<?php
+
+return [
+    'provinces' => [
+        'Azuay' => ['Cuenca', 'Gualaceo', 'Paute', 'Chordeleg', 'Sígsig', 'Santa Isabel'],
+        'Bolívar' => ['Guaranda', 'Chillanes', 'San Miguel', 'Chimbo', 'Echeandía'],
+        'Cañar' => ['Azogues', 'Biblián', 'Cañar', 'La Troncal', 'El Tambo'],
+        'Carchi' => ['Tulcán', 'San Pedro de Huaca', 'Montúfar', 'Bolívar', 'Espejo', 'Mira'],
+        'Chimborazo' => ['Riobamba', 'Alausí', 'Guano', 'Colta', 'Guamote', 'Chunchi', 'Pallatanga', 'Chambo', 'Cumandá', 'Penipe'],
+        'Cotopaxi' => ['Latacunga', 'Salcedo', 'La Maná', 'Pujilí', 'Saquisilí', 'Sigchos', 'Pangua'],
+        'El Oro' => ['Machala', 'Santa Rosa', 'Pasaje', 'Huaquillas', 'El Guabo', 'Arenillas', 'Zaruma', 'Piñas', 'Portovelo', 'Balsas', 'Marcabelí', 'Las Lajas', 'Atahualpa', 'Chilla'],
+        'Esmeraldas' => ['Esmeraldas', 'Quinindé', 'San Lorenzo', 'Eloy Alfaro', 'Atacames', 'Muisne', 'Rioverde'],
+        'Galápagos' => ['Puerto Baquerizo Moreno', 'Puerto Ayora', 'Puerto Villamil', 'Puerto Velasco Ibarra'],
+        'Guayas' => ['Guayaquil', 'Durán', 'Milagro', 'Daule', 'Samborondón', 'El Empalme', 'Naranjal', 'Balzar', 'Playas', 'Naranjito', 'Salitre', 'Yaguachi', 'Colimes', 'Pedro Carbo', 'San Jacinto de Yaguachi', 'El Triunfo', 'Alfredo Baquerizo Moreno', 'Lomas de Sargentillo', 'Nobol'],
+        'Imbabura' => ['Ibarra', 'Otavalo', 'Antonio Ante', 'Cotacachi', 'Pimampiro', 'San Miguel de Urcuquí'],
+        'Loja' => ['Loja', 'Catamayo', 'Cariamanga', 'Macará', 'Catacocha', 'Celica', 'Saraguro', 'Alamor', 'Zapotillo', 'Pindal', 'Quilanga', 'Chaguarpamba', 'Amaluza', 'Gonzanamá', 'Sozoranga'],
+        'Los Ríos' => ['Babahoyo', 'Quevedo', 'Ventanas', 'Vinces', 'Buena Fe', 'Valencia', 'Mocache', 'Pueblo Viejo', 'Palenque', 'Urdaneta', 'Baba', 'Montalvo'],
+        'Manabí' => ['Portoviejo', 'Manta', 'Chone', 'Jipijapa', 'El Carmen', 'Bahía de Caráquez', 'Pedernales', 'Calceta', 'Montecristi', 'Rocafuerte', 'Jaramijó', 'Santa Ana', 'Tosagua', 'Paján', 'Puerto López', 'Junín', 'Pichincha', 'Flavio Alfaro', 'San Vicente', 'Sucre', 'Olmedo', 'Jama', 'Veinticuatro de Mayo'],
+        'Morona Santiago' => ['Macas', 'Sucúa', 'Méndez', 'Gualaquiza', 'Palora', 'Santiago', 'Limón Indanza', 'San Juan Bosco', 'Taisha', 'Logroño', 'Pablo Sexto', 'Tiwintza'],
+        'Napo' => ['Tena', 'Archidona', 'El Chaco', 'Quijos', 'Carlos Julio Arosemena Tola'],
+        'Orellana' => ['Puerto Francisco de Orellana', 'La Joya de los Sachas', 'Loreto', 'Aguarico'],
+        'Pastaza' => ['Puyo', 'Mera', 'Santa Clara', 'Arajuno'],
+        'Pichincha' => ['Quito', 'Cayambe', 'Mejía', 'Pedro Moncayo', 'Rumiñahui', 'San Miguel de los Bancos', 'Pedro Vicente Maldonado', 'Puerto Quito'],
+        'Santa Elena' => ['Santa Elena', 'La Libertad', 'Salinas'],
+        'Santo Domingo de los Tsáchilas' => ['Santo Domingo'],
+        'Sucumbíos' => ['Nueva Loja', 'Shushufindi', 'Lumbaquí', 'Gonzalo Pizarro', 'Cascales', 'Cuyabeno', 'Sucumbíos', 'Putumayo'],
+        'Tungurahua' => ['Ambato', 'Baños', 'Pelileo', 'Píllaro', 'Quero', 'Patate', 'Cevallos', 'Mocha', 'Tisaleo'],
+        'Zamora Chinchipe' => ['Zamora', 'Yantzaza', 'Zumba', 'El Pangui', 'Zumbi', 'Palanda', 'Paquisha', 'Guayzimi', 'Yacuambi'],
+    ],
+];
