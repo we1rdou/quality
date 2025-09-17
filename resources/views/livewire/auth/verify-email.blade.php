@@ -13,7 +13,9 @@ new #[Layout('components.layouts.auth')] class extends Component {
     public function sendVerification(): void
     {
         if (Auth::user()->hasVerifiedEmail()) {
-            $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+            $user = Auth::user();
+            $defaultRoute = $user->isAdmin() ? route('admin.dashboard', absolute: false) : route('dashboard', absolute: false);
+            $this->redirectIntended(default: $defaultRoute, navigate: true);
 
             return;
         }

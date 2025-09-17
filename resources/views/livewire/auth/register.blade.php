@@ -58,7 +58,9 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
         Auth::login($user);
 
-        $this->redirectIntended(route('dashboard', absolute: false), navigate: true);
+        // Redirigir según el rol del usuario (aunque generalmente será client)
+        $defaultRoute = $user->isAdmin() ? route('admin.dashboard', absolute: false) : route('dashboard', absolute: false);
+        $this->redirectIntended($defaultRoute, navigate: true);
     }
 }; ?>
 

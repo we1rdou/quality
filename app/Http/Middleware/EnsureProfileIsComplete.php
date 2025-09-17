@@ -14,13 +14,13 @@ class EnsureProfileIsComplete
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
-        
-        if (session()->has('needs_profile_completion') || 
-            ($user !== null && 
+
+        if (session()->has('needs_profile_completion') ||
+            ($user !== null &&
             (empty($user->phone) || empty($user->address) || empty($user->province) || empty($user->city)))) {
             return redirect()->route('profile.complete');
         }
-        
+
         return $next($request);
     }
 }

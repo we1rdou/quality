@@ -13,6 +13,6 @@ class SendPasswordChangedNotification
     public function handle(PasswordReset $event): void
     {
         // Enviar notificación al usuario que cambió su contraseña
-        $event->user->notify(new PasswordChangedNotification());
+        $event->user->notify(new PasswordChangedNotification);
     }
 }

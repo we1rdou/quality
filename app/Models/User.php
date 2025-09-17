@@ -16,6 +16,13 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasFactory, Notifiable;
 
     /**
+     * Role constants
+     */
+    public const ROLE_ADMIN = 'admin';
+
+    public const ROLE_CLIENT = 'client';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
@@ -28,7 +35,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'address',
         'province',
         'city',
+        'role',
         'oauth_provider',
+        'is_suspended',
+        'suspended_until',
+        'suspension_reason',
+        'last_login_at',
     ];
 
     /**
@@ -51,6 +63,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'suspended_until' => 'datetime',
+            'last_login_at' => 'datetime',
+            'is_suspended' => 'boolean',
         ];
     }
 
@@ -80,5 +95,129 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPasswordNotification($token));
+    }
+
+    /**
+     * Check if user is an administrator
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    /**
+     * Check if user is a client
+     */
+    public function isClient(): bool
+    {
+        return $this->role === self::ROLE_CLIENT;
+    }
+
+    /**
+     * Get all available roles
+     */
+    public static function getRoles(): array
+    {
+        return [
+            self::ROLE_ADMIN,
+            self::ROLE_CLIENT,
+        ];
+    }
+
+    // Account Status Methods
+
+    /**
+     * Check if user account is currently suspended
+     */
+    public function isSuspended(): bool
+    {
+        if (! $this->is_suspended) {
+            return false;
+        }
+
+        // Check if suspension has expired
+        if ($this->suspended_until && $this->suspended_until->isPast()) {
+            $this->update([
+                'is_suspended' => false,
+                'suspended_until' => null,
+                'suspension_reason' => null,
+            ]);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if user can login (not suspended and email verified)
+     */
+    public function canLogin(): bool
+    {
+        return ! $this->isSuspended();
+    }
+
+    /**
+     * Get account status as string
+     */
+    public function getAccountStatus(): string
+    {
+        if ($this->isSuspended()) {
+            return 'Suspendido';
+        }
+
+        if (! $this->email_verified_at) {
+            return 'Pendiente verificación';
+        }
+
+        return 'Activo';
+    }
+
+    /**
+     * Get account status color for UI
+     */
+    public function getAccountStatusColor(): string
+    {
+        if ($this->isSuspended()) {
+            return 'red';
+        }
+
+        if (! $this->email_verified_at) {
+            return 'yellow';
+        }
+
+        return 'green';
+    }
+
+    /**
+     * Suspend the user account for a specific period
+     */
+    public function suspend(\DateTimeInterface $until, ?string $reason = null): bool
+    {
+        return $this->update([
+            'is_suspended' => true,
+            'suspended_until' => $until,
+            'suspension_reason' => $reason ?? 'Suspensión temporal por incumplimiento',
+        ]);
+    }
+
+    /**
+     * Remove suspension from user account
+     */
+    public function unsuspend(): bool
+    {
+        return $this->update([
+            'is_suspended' => false,
+            'suspended_until' => null,
+            'suspension_reason' => null,
+        ]);
+    }
+
+    /**
+     * Update last login timestamp
+     */
+    public function updateLastLogin(): bool
+    {
+        return $this->update(['last_login_at' => now()]);
     }
 }

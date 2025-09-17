@@ -12,9 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            if (Schema::hasColumn('users', 'current_session_id')) {
-                $table->dropColumn('current_session_id');
-            }
+            $table->enum('role', ['admin', 'client'])->default('client')->after('city');
         });
     }
 
@@ -24,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('current_session_id')->nullable()->after('remember_token');
+            $table->dropColumn('role');
         });
     }
 };

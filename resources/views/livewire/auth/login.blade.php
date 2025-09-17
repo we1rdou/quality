@@ -37,10 +37,27 @@ new #[Layout('components.layouts.auth')] class extends Component {
             ]);
         }
 
+        $user = Auth::user();
+
+        // Verificar estado de la cuenta después del login exitoso
+        if ($user->isSuspended()) {
+            Auth::logout();
+            $until = $user->suspended_until ? $user->suspended_until->format('d/m/Y H:i') : 'indefinidamente';
+            throw ValidationException::withMessages([
+                'email' => 'Su cuenta ha sido suspendida hasta ' . $until . '. Razón: ' . ($user->suspension_reason ?? 'Suspensión temporal por incumplimiento.'),
+            ]);
+        }
+
+        // Actualizar último login
+        $user->updateLastLogin();
+
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        // Redirigir según el rol del usuario
+        $defaultRoute = $user->isAdmin() ? route('admin.dashboard', absolute: false) : route('dashboard', absolute: false);
+        
+        $this->redirectIntended(default: $defaultRoute, navigate: true);
     }
 
     /**

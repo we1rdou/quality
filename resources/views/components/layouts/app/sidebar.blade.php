@@ -7,13 +7,30 @@
         <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
-            <a href="{{ route('dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
+            <a href="{{ auth()->user()->isAdmin() ? route('admin.dashboard') : route('dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
                 <x-app-logo />
             </a>
 
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Platform')" class="grid">
-                    <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
+                    <flux:navlist.item icon="home" :href="auth()->user()->isAdmin() ? route('admin.dashboard') : route('dashboard')" :current="request()->routeIs('dashboard') || request()->routeIs('admin.dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
+                    
+                    @if(auth()->user()->isAdmin())
+                        <flux:navlist.item icon="users" :href="route('admin.users')" :current="request()->routeIs('admin.users')" wire:navigate>{{ __('Gestión de Usuarios') }}</flux:navlist.item>
+                        <flux:navlist.item icon="shield-check" :href="route('admin.dashboard')" :current="request()->routeIs('admin.*')" wire:navigate>{{ __('Panel Admin') }}</flux:navlist.item>
+                    @endif
+                </flux:navlist.group>
+
+                @if(auth()->user()->isClient())
+                <flux:navlist.group :heading="__('Mi Cuenta')" class="grid">
+                    <flux:navlist.item icon="user" :href="route('settings.profile')" :current="request()->routeIs('settings.profile')" wire:navigate>{{ __('Mi Perfil') }}</flux:navlist.item>
+                    <flux:navlist.item icon="key" :href="route('settings.password')" :current="request()->routeIs('settings.password')" wire:navigate>{{ __('Seguridad') }}</flux:navlist.item>
+                </flux:navlist.group>
+                @endif
+
+                <flux:navlist.group :heading="__('Sistema de Calidad')" class="grid">
+                    <flux:navlist.item icon="clipboard-document-list" href="#" class="opacity-50 cursor-not-allowed">{{ __('Mis Procesos') }} <span class="text-xs">(Próximamente)</span></flux:navlist.item>
+                    <flux:navlist.item icon="chart-bar" href="#" class="opacity-50 cursor-not-allowed">{{ __('Reportes') }} <span class="text-xs">(Próximamente)</span></flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>
 
@@ -52,6 +69,23 @@
                                 <div class="grid flex-1 text-start text-sm leading-tight">
                                     <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
                                     <span class="truncate text-xs">{{ auth()->user()->email }}</span>
+                                    <div class="flex items-center gap-1 mt-1">
+                                        @php
+                                            $status = auth()->user()->getAccountStatus();
+                                            $color = auth()->user()->getAccountStatusColor();
+                                        @endphp
+                                        <span class="inline-block w-2 h-2 rounded-full
+                                            @if($color === 'green') bg-green-500
+                                            @elseif($color === 'yellow') bg-yellow-500
+                                            @elseif($color === 'orange') bg-orange-500
+                                            @elseif($color === 'red') bg-red-500
+                                            @else bg-gray-500
+                                            @endif"></span>
+                                        <span class="text-xs text-zinc-500 dark:text-zinc-400">{{ $status }}</span>
+                                        @if(auth()->user()->isAdmin())
+                                            <span class="ml-1 text-xs font-medium text-purple-600 dark:text-purple-400">Admin</span>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>

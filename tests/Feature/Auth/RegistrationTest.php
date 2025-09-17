@@ -14,6 +14,10 @@ test('new users can register', function () {
         ->set('email', 'test@example.com')
         ->set('password', 'password')
         ->set('password_confirmation', 'password')
+        ->set('phone', '+1234567890')
+        ->set('address', '123 Test Street')
+        ->set('province', 'Pichincha')
+        ->set('city', 'Quito')
         ->call('register');
 
     $response

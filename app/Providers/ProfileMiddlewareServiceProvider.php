@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Http\Middleware\EnsureProfileIsComplete;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Contracts\Http\Kernel;
 
 class ProfileMiddlewareServiceProvider extends ServiceProvider
 {
@@ -15,7 +14,7 @@ class ProfileMiddlewareServiceProvider extends ServiceProvider
     {
         // Registrar el middleware con un alias
         $this->app->singleton('middleware.profile.complete', function () {
-            return new EnsureProfileIsComplete();
+            return new EnsureProfileIsComplete;
         });
     }
 

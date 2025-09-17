@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
-use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
@@ -18,29 +17,33 @@ Route::get('/profile/complete', App\Livewire\Profile\Complete::class)
     ->name('profile.complete');
 
 // Todas las rutas protegidas que requieren autenticación, verificación de email Y perfil completo
-Route::middleware(['auth', 'verified', 'profile.complete'])->group(function () {
+Route::middleware(['auth', 'verified', 'profile.complete', 'account.active'])->group(function () {
     // Dashboard
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
-    
+
     // Rutas de configuración
     Route::redirect('settings', 'settings/profile');
     Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
-    
-    // Ruta de contraseña modificada - solo para usuarios con registro normal
-    Route::get('/settings/password', function () {
-        if (Auth::user()->oauth_provider) {
-            return redirect()->route('settings.profile')
-                ->with('warning', 'El cambio de contraseña no está disponible para cuentas vinculadas a Google.');
-        }
-        
-        return view('livewire.settings.password');
-    })->name('settings.password');
-    
+    Volt::route('settings/password', 'settings.password')->name('settings.password');
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
-    
+
     // Otras rutas protegidas...
+});
+
+// Rutas específicas para administradores
+Route::middleware(['auth', 'verified', 'profile.complete', 'account.active', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Dashboard de administrador
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('dashboard');
+
+    // Gestión de usuarios
+    Route::get('/users', \App\Livewire\Admin\Users::class)->name('users');
+
+    // Estadísticas y reportes
+    Volt::route('/reports', 'admin.reports')->name('reports');
 });
 
 require __DIR__.'/auth.php';
