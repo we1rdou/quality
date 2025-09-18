@@ -30,6 +30,9 @@ class AppServiceProvider extends ServiceProvider
             }
         });
 
+        // Registrar listener para actualizar last_login_at cuando un usuario inicie sesión
+        Event::listen(\Illuminate\Auth\Events\Login::class, \App\Listeners\UpdateLastLoginAt::class);
+
         // Verificar que exista al menos un administrador en producción
         $this->ensureAdminExists();
     }

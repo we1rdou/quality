@@ -56,7 +56,7 @@ class SocialAuthController extends Controller
                 return redirect()->route('profile.complete');
             }
 
-            return redirect()->intended('dashboard');
+            return redirect()->intended('/');
 
         } catch (\Exception $e) {
             Log::error('Error en autenticación Google: '.$e->getMessage());

@@ -1,266 +1,242 @@
 <x-layouts.app :title="__('Panel de Administración')">
-    <div class="flex h-full w-ful                        <div>
-                            <dt class="text-sm font-medium text-zinc-500 dark:text-zinc-400 truncate">Usuarios Suspendidos</dt>
-                            <dd class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">{{ $suspendedUsers }}</dd>
-                            <dd class="text-xs text-red-600 dark:text-red-400">Temporalmente suspendidos</dd>
-                        </div>x-1 flex-col gap-6 rounded-xl">
-        <!-- Header Administrativo Avanzado -->
-        <div class="flex items-center justify-between p-6 bg-gradient-to-r from-purple-600 to-purple-800 rounded-xl shadow-lg border border-purple-500">
-            <div>
-                <h1 class="text-3xl font-bold text-white">Panel de Administración</h1>
-                <p class="text-purple-100">Gestión completa del sistema - {{ auth()->user()->name }}</p>
-            </div>
-            <div class="flex items-center gap-3">
-                <a href="{{ route('dashboard') }}" class="inline-flex items-center px-3 py-2 bg-white/20 hover:bg-white/30 text-white text-sm font-medium rounded-lg transition-colors">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                    </svg>
-                    Vista Usuario
-                </a>
-                <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-white text-purple-800">
-                    <svg class="w-3 h-3 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    Administrador
-                </span>
-            </div>
-        </div>
+    <div class="container mx-auto p-3">
+        @php
+            $totalUsers = \App\Models\User::count();
+            $recentUsers = \App\Models\User::where('id', '!=', auth()->id())
+                ->orderByRaw('last_login_at IS NULL, last_login_at DESC')
+                ->orderBy('created_at', 'desc')
+                ->paginate(5, ['*'], 'users_page');
+        @endphp
 
-        <!-- Estadísticas Completas del Sistema -->
-        <div class="grid auto-rows-min gap-4 md:grid-cols-2 lg:grid-cols-4">
-            @php
-                $totalUsers = \App\Models\User::count();
-                $adminUsers = \App\Models\User::where('role', 'admin')->count();
-                $clientUsers = \App\Models\User::where('role', 'client')->count();
-                $activeUsers = \App\Models\User::where('is_suspended', false)->count();
-                $suspendedUsers = \App\Models\User::where('is_suspended', true)->count();
-                $unverifiedUsers = \App\Models\User::whereNull('email_verified_at')->count();
-                $todayRegistrations = \App\Models\User::whereDate('created_at', today())->count();
-                $weekRegistrations = \App\Models\User::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count();
-                $recentLogins = \App\Models\User::where('last_login_at', '>=', now()->subDays(7))->count();
-            @endphp
-
-            <!-- Total de Usuarios -->
-            <div class="relative p-6 bg-white dark:bg-zinc-800 rounded-xl border border-neutral-200 dark:border-neutral-700 shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="ml-4 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-zinc-500 dark:text-zinc-400 truncate">Total Usuarios</dt>
-                            <dd class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">{{ $totalUsers }}</dd>
-                            <dd class="text-xs text-blue-600 dark:text-blue-400">+{{ $weekRegistrations }} esta semana</dd>
-                        </dl>
-                    </div>
-                </div>
+        <!-- Header -->
+        <div class="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700 rounded-2xl mb-4 shadow-xl border border-white/10">
+            <!-- Patrón de fondo decorativo -->
+            <div class="absolute inset-0">
+                <div class="absolute inset-0 bg-gradient-to-br from-black/10 to-white/5"></div>
+                <div class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20 blur-sm"></div>
+                <div class="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full -ml-16 -mb-16 blur-sm"></div>
+                <div class="absolute top-1/3 left-1/4 w-20 h-20 bg-white/5 rounded-full blur-sm"></div>
+                <!-- Elementos geométricos -->
+                <div class="absolute top-6 right-24 w-3 h-3 bg-white/30 rounded-full"></div>
+                <div class="absolute bottom-8 right-40 w-2 h-2 bg-white/40 rounded-full"></div>
+                <div class="absolute top-12 left-40 w-2.5 h-2.5 bg-white/25 rounded-full"></div>
+                <div class="absolute top-20 right-12 w-1.5 h-1.5 bg-white/35 rounded-full"></div>
             </div>
-
-            <!-- Usuarios Activos -->
-            <div class="relative p-6 bg-white dark:bg-zinc-800 rounded-xl border border-neutral-200 dark:border-neutral-700 shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="ml-4 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-zinc-500 dark:text-zinc-400 truncate">Activos</dt>
-                            <dd class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">{{ $activeUsers }}</dd>
-                            <dd class="text-xs text-green-600 dark:text-green-400">{{ round(($activeUsers/$totalUsers)*100, 1) }}% del total</dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Usuarios Problemáticos -->
-            <div class="relative p-6 bg-white dark:bg-zinc-800 rounded-xl border border-neutral-200 dark:border-neutral-700 shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="ml-4 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-zinc-500 dark:text-zinc-400 truncate">Bloqueados/Suspendidos</dt>
-                            <dd class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">{{ $bannedUsers + $suspendedUsers }}</dd>
-                            <dd class="text-xs text-red-600 dark:text-red-400">{{ $bannedUsers }} bloq. | {{ $suspendedUsers }} susp.</dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Registros Recientes -->
-            <div class="relative p-6 bg-white dark:bg-zinc-800 rounded-xl border border-neutral-200 dark:border-neutral-700 shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="ml-4 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-zinc-500 dark:text-zinc-400 truncate">Hoy</dt>
-                            <dd class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">{{ $todayRegistrations }}</dd>
-                            <dd class="text-xs text-orange-600 dark:text-orange-400">{{ $recentLogins }} activos 7d</dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Panel de Control Administrativo -->
-        <div class="grid gap-6 lg:grid-cols-3">
-            <!-- Gestión de Usuarios Avanzada -->
-            <div class="lg:col-span-2">
-                <div class="relative p-6 bg-white dark:bg-zinc-800 rounded-xl border border-neutral-200 dark:border-neutral-700 shadow-sm">
-                    <h3 class="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mb-6">Control de Usuarios</h3>
-                    <div class="grid gap-4 md:grid-cols-2">
-                        <a href="{{ route('admin.users') }}" class="group flex items-center p-4 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 rounded-xl border border-blue-200 dark:border-blue-700 hover:shadow-md transition-all">
-                            <div class="flex-shrink-0">
-                                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+            
+            <div class="relative px-6 py-5">
+                <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                        <div class="flex items-center mb-2">
+                            <div class="w-1.5 h-6 bg-gradient-to-b from-blue-300 to-purple-400 rounded-full mr-4 shadow-lg"></div>
+                            <div>
+                                <h1 class="text-2xl lg:text-3xl font-bold text-white mb-1 tracking-tight drop-shadow-sm">
+                                    Panel de Administración
+                                </h1>
+                                <div class="flex items-center text-blue-100/90 text-sm font-medium">
+                                    <svg class="w-3.5 h-3.5 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
                                     </svg>
+                                    Gestión completa del sistema
                                 </div>
                             </div>
-                            <div class="ml-4 flex-1">
-                                <h4 class="text-lg font-medium text-blue-900 dark:text-blue-100">Gestionar Usuarios</h4>
-                                <p class="text-sm text-blue-700 dark:text-blue-200">Ver, filtrar y administrar cuentas</p>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <svg class="w-5 h-5 text-blue-600 dark:text-blue-300 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
+                        </div>
+                    </div>
+                    <div class="hidden lg:block">
+                        <a href="{{ route('admin.users') }}" class="group block">
+                            <div class="relative">
+                                <div class="w-20 h-20 bg-gradient-to-br from-white/25 to-white/5 backdrop-blur-sm rounded-xl border-2 border-white/30 shadow-xl flex flex-col items-center justify-center ring-2 ring-white/20 hover:scale-105 hover:shadow-2xl transition-all duration-300 cursor-pointer">
+                                    <svg class="w-6 h-6 text-white drop-shadow-lg mb-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
+                                    </svg>
+                                    <span class="text-xs font-bold text-white drop-shadow-sm">{{ $totalUsers }}</span>
+                                </div>
+                                <!-- Indicador decorativo -->
+                                <div class="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
+                                    <div class="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                </div>
+                                <!-- Arrow hover effect -->
+                                <div class="absolute -bottom-1 -right-1 opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-110">
+                                    <div class="bg-white rounded-full p-1 shadow-lg border border-gray-200">
+                                        <svg class="w-2.5 h-2.5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                        </svg>
+                                    </div>
+                                </div>
                             </div>
                         </a>
-
-                        <div class="flex items-center p-4 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 rounded-xl border border-purple-200 dark:border-purple-700">
-                            <div class="flex-shrink-0">
-                                <div class="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
-                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                            <div class="ml-4 flex-1">
-                                <h4 class="text-lg font-medium text-purple-900 dark:text-purple-100">Crear Administrador</h4>
-                                <p class="text-sm text-purple-700 dark:text-purple-200">Próximamente - Nuevo admin</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center p-4 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 rounded-xl border border-green-200 dark:border-green-700">
-                            <div class="flex-shrink-0">
-                                <div class="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
-                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                            <div class="ml-4 flex-1">
-                                <h4 class="text-lg font-medium text-green-900 dark:text-green-100">Reportes Avanzados</h4>
-                                <p class="text-sm text-green-700 dark:text-green-200">Estadísticas y métricas</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center p-4 bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900 dark:to-orange-800 rounded-xl border border-orange-200 dark:border-orange-700">
-                            <div class="flex-shrink-0">
-                                <div class="w-10 h-10 bg-orange-600 rounded-lg flex items-center justify-center">
-                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                            <div class="ml-4 flex-1">
-                                <h4 class="text-lg font-medium text-orange-900 dark:text-orange-100">Configuración Sistema</h4>
-                                <p class="text-sm text-orange-700 dark:text-orange-200">Ajustes generales</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Análisis en Tiempo Real -->
-            <div>
-                <div class="relative p-6 bg-white dark:bg-zinc-800 rounded-xl border border-neutral-200 dark:border-neutral-700 shadow-sm">
-                    <h3 class="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-4">Análisis Rápido</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-zinc-700 rounded-lg">
-                            <span class="text-sm text-zinc-600 dark:text-zinc-400">Administradores:</span>
-                            <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{{ $adminUsers }}</span>
-                        </div>
-                        <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-zinc-700 rounded-lg">
-                            <span class="text-sm text-zinc-600 dark:text-zinc-400">Clientes:</span>
-                            <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{{ $clientUsers }}</span>
-                        </div>
-                        <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-zinc-700 rounded-lg">
-                            <span class="text-sm text-zinc-600 dark:text-zinc-400">Sin verificar:</span>
-                            <span class="text-sm font-semibold text-yellow-600 dark:text-yellow-400">{{ $unverifiedUsers }}</span>
-                        </div>
-                        <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-zinc-700 rounded-lg">
-                            <span class="text-sm text-zinc-600 dark:text-zinc-400">Problemáticos:</span>
-                            <span class="text-sm font-semibold text-red-600 dark:text-red-400">{{ $suspendedUsers }}</span>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Lista de usuarios recientes -->
-        <div class="relative bg-white dark:bg-zinc-800 rounded-xl border border-neutral-200 dark:border-neutral-700 shadow-sm">
-            <div class="px-6 py-4 border-b border-neutral-200 dark:border-neutral-700">
-                <h3 class="text-lg font-medium text-zinc-900 dark:text-zinc-100">Usuarios Recientes</h3>
+        <!-- Recent Users Activity -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 rounded-t-2xl">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="bg-gradient-to-br from-blue-100 via-purple-50 to-indigo-100 dark:from-blue-900/50 dark:via-purple-800/30 dark:to-indigo-900/50 rounded-xl p-2 mr-3 shadow-md border border-blue-200/50 dark:border-blue-700/50">
+                            <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-0.5">
+                                Usuarios y Última Conexión
+                            </h3>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">Actividad reciente de usuarios en el sistema</p>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-700 rounded-lg px-3 py-1.5 shadow-md border border-gray-200 dark:border-gray-600">
+                        <div class="flex items-center">
+                            <div class="w-1.5 h-1.5 bg-green-400 rounded-full mr-1.5 animate-pulse shadow-sm"></div>
+                            <span class="text-xs font-semibold text-gray-700 dark:text-gray-300">{{ $recentUsers->total() }} usuarios</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="p-6">
-                @php
-                    $recentUsers = \App\Models\User::latest()->take(5)->get();
-                @endphp
-                
+
+            <div class="p-4">
                 @if($recentUsers->count() > 0)
-                    <div class="space-y-3">
+                    <div class="space-y-1.5">
                         @foreach($recentUsers as $user)
-                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-zinc-700 rounded-lg">
+                            <div class="group flex items-center justify-between p-3 rounded-lg hover:bg-gradient-to-r hover:from-blue-50/50 hover:via-purple-50/30 hover:to-indigo-50/50 dark:hover:from-blue-900/10 dark:hover:via-purple-900/5 dark:hover:to-indigo-900/10 transition-all duration-300 border border-transparent hover:border-blue-200/50 dark:hover:border-blue-700/30 hover:shadow-sm">
                                 <div class="flex items-center space-x-3">
-                                    <div class="flex-shrink-0">
-                                        <div class="w-8 h-8 bg-gray-200 dark:bg-zinc-600 rounded-full flex items-center justify-center">
-                                            <span class="text-xs font-medium text-zinc-600 dark:text-zinc-300">
-                                                {{ $user->initials() }}
+                                    <div class="relative">
+                                        <div class="w-9 h-9 bg-gradient-to-br from-blue-400 via-purple-500 to-indigo-500 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg group-hover:scale-105 transition-all duration-300 border border-white/20">
+                                            <span class="text-xs font-bold text-white drop-shadow-sm">
+                                                {{ strtoupper(substr($user->name, 0, 2)) }}
                                             </span>
                                         </div>
+                                        @if($user->last_login_at && $user->last_login_at->gt(now()->subHours(24)))
+                                            <div class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full border border-white dark:border-gray-800 shadow-sm">
+                                                <div class="w-full h-full bg-green-400 rounded-full animate-ping opacity-60"></div>
+                                            </div>
+                                        @endif
                                     </div>
-                                    <div>
-                                        <p class="text-sm font-medium text-zinc-900 dark:text-zinc-100">{{ $user->name }}</p>
-                                        <p class="text-xs text-zinc-500 dark:text-zinc-400">{{ $user->email }}</p>
+                                    <div class="min-w-0 flex-1">
+                                        <div class="flex items-center space-x-2 mb-0.5">
+                                            <p class="font-semibold text-gray-900 dark:text-white truncate text-sm">{{ $user->name }}</p>
+                                            <span class="inline-flex items-center px-1.5 py-0.5 text-xs font-medium rounded-md border {{ $user->role === 'admin' ? 'bg-gradient-to-r from-yellow-50 to-yellow-100 text-yellow-700 border-yellow-200 dark:from-yellow-900/30 dark:to-yellow-800/30 dark:text-yellow-300 dark:border-yellow-700' : 'bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 border-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 dark:text-blue-300 dark:border-blue-700' }}">
+                                                {{ ucfirst($user->role) }}
+                                            </span>
+                                        </div>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 truncate flex items-center">
+                                            <svg class="w-2.5 h-2.5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                                                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                                            </svg>
+                                            {{ $user->email }}
+                                        </p>
                                     </div>
                                 </div>
-                                <div class="flex items-center space-x-2">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $user->role === 'admin' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' }}">
-                                        {{ $user->role === 'admin' ? 'Admin' : 'Cliente' }}
-                                    </span>
-                                    <span class="text-xs text-zinc-500 dark:text-zinc-400">
-                                        {{ $user->created_at->diffForHumans() }}
-                                    </span>
+                                <div class="text-right flex flex-col items-end space-y-1">
+                                    <div class="text-right">
+                                        @if($user->last_login_at)
+                                            <p class="text-xs font-semibold text-gray-900 dark:text-white">
+                                                {{ $user->last_login_at->format('d/m/Y H:i') }}
+                                            </p>
+                                            <p class="text-xs text-gray-400 dark:text-gray-500">
+                                                {{ $user->last_login_at->diffForHumans() }}
+                                            </p>
+                                        @else
+                                            <p class="text-xs text-gray-400 dark:text-gray-500 font-medium">Nunca conectado</p>
+                                        @endif
+                                    </div>
+                                    <div class="flex space-x-1">
+                                        @if($user->is_suspended)
+                                            <span class="inline-flex items-center px-1.5 py-0.5 text-xs font-medium bg-gradient-to-r from-red-100 to-red-50 text-red-700 dark:from-red-900/30 dark:to-red-800/30 dark:text-red-300 rounded border border-red-200 dark:border-red-700">
+                                                <svg class="w-2.5 h-2.5 mr-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                Suspendido
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center px-1.5 py-0.5 text-xs font-medium bg-gradient-to-r from-green-100 to-green-50 text-green-700 dark:from-green-900/30 dark:to-green-800/30 dark:text-green-300 rounded border border-green-200 dark:border-green-700">
+                                                <svg class="w-2.5 h-2.5 mr-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                Activo
+                                            </span>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         @endforeach
                     </div>
                 @else
-                    <p class="text-zinc-500 dark:text-zinc-400 text-center py-4">No hay usuarios registrados</p>
+                    <div class="text-center py-8">
+                        <div class="relative mb-3">
+                            <div class="w-12 h-12 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700 rounded-xl mx-auto flex items-center justify-center shadow-md">
+                                <svg class="w-6 h-6 text-gray-400 dark:text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm font-semibold">No hay usuarios registrados</p>
+                        <p class="text-gray-400 dark:text-gray-500 text-xs mt-1">Los usuarios aparecerán aquí cuando se registren</p>
+                    </div>
                 @endif
             </div>
+
+            <!-- Paginación -->
+            @if($recentUsers->hasPages())
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center justify-between">
+                        <div class="text-xs text-gray-600 dark:text-gray-400">
+                            <span class="font-medium">{{ $recentUsers->firstItem() }} - {{ $recentUsers->lastItem() }}</span>
+                            <span class="text-gray-500 dark:text-gray-500 ml-1">de {{ $recentUsers->total() }}</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            {{-- Botón Anterior --}}
+                            @if($recentUsers->onFirstPage())
+                                <span class="px-2 py-1.5 text-xs text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 rounded cursor-not-allowed border border-gray-200 dark:border-gray-600 flex items-center">
+                                    <svg class="w-2.5 h-2.5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    Ant
+                                </span>
+                            @else
+                                <a href="{{ $recentUsers->previousPageUrl() }}" class="px-2 py-1.5 text-xs text-blue-600 dark:text-blue-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-blue-50 dark:hover:bg-gray-600 transition-all duration-200 flex items-center font-medium">
+                                    <svg class="w-2.5 h-2.5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    Ant
+                                </a>
+                            @endif
+
+                            {{-- Números de página --}}
+                            @foreach($recentUsers->getUrlRange(max(1, $recentUsers->currentPage() - 1), min($recentUsers->lastPage(), $recentUsers->currentPage() + 1)) as $page => $url)
+                                @if($page == $recentUsers->currentPage())
+                                    <span class="px-2.5 py-1.5 text-xs text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded shadow-md font-semibold min-w-[1.5rem] text-center">
+                                        {{ $page }}
+                                    </span>
+                                @else
+                                    <a href="{{ $url }}" class="px-2.5 py-1.5 text-xs text-blue-600 dark:text-blue-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-blue-50 dark:hover:bg-gray-600 transition-all duration-200 font-medium min-w-[1.5rem] text-center">
+                                        {{ $page }}
+                                    </a>
+                                @endif
+                            @endforeach
+
+                            {{-- Botón Siguiente --}}
+                            @if($recentUsers->hasMorePages())
+                                <a href="{{ $recentUsers->nextPageUrl() }}" class="px-2 py-1.5 text-xs text-blue-600 dark:text-blue-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-blue-50 dark:hover:bg-gray-600 transition-all duration-200 flex items-center font-medium">
+                                    Sig
+                                    <svg class="w-2.5 h-2.5 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </a>
+                            @else
+                                <span class="px-2 py-1.5 text-xs text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 rounded cursor-not-allowed border border-gray-200 dark:border-gray-600 flex items-center">
+                                    Sig
+                                    <svg class="w-2.5 h-2.5 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 </x-layouts.app>

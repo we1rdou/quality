@@ -54,10 +54,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
 
-        // Redirigir según el rol del usuario
-        $defaultRoute = $user->isAdmin() ? route('admin.dashboard', absolute: false) : route('dashboard', absolute: false);
-        
-        $this->redirectIntended(default: $defaultRoute, navigate: true);
+        // Redirigir a la página de inicio después del login
+        $this->redirectIntended(default: '/', navigate: true);
     }
 
     /**

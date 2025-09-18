@@ -49,7 +49,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
         
         session()->forget('needs_profile_completion');
         
-        $this->redirectIntended(route('dashboard', absolute: false), navigate: true);
+        $this->redirectIntended('/', navigate: true);
     }
     
     // Métodos auxiliares para la vista

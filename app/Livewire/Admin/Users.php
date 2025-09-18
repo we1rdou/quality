@@ -19,7 +19,11 @@ class Users extends Component
 
     public bool $showUserModal = false;
 
+    public bool $showUserDetailsModal = false;
+
     public ?User $selectedUser = null;
+
+    public ?User $userDetails = null;
 
     public string $actionType = '';
 
@@ -71,6 +75,12 @@ class Users extends Component
         $this->showUserModal = true;
     }
 
+    public function openUserDetailsModal(User $user)
+    {
+        $this->userDetails = $user;
+        $this->showUserDetailsModal = true;
+    }
+
     public function closeUserModal()
     {
         $this->showUserModal = false;
@@ -78,6 +88,12 @@ class Users extends Component
         $this->actionType = '';
         $this->actionReason = '';
         $this->suspensionDays = '7';
+    }
+
+    public function closeUserDetailsModal()
+    {
+        $this->showUserDetailsModal = false;
+        $this->userDetails = null;
     }
 
     public function executeAction()
