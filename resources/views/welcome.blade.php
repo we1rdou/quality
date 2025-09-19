@@ -129,6 +129,23 @@
         </div>
     </section>
 
+    <!-- Sección Proforma -->
+    <section id="proforma" class="py-20 bg-gradient-to-br from-blue-50 via-purple-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    Solicita tu <span class="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Proforma</span>
+                </h2>
+                <p class="text-xl text-gray-600 dark:text-gray-300 mb-6">Cotiza productos y servicios a medida para tu proyecto</p>
+                <div class="w-24 h-1 bg-gradient-to-r from-blue-600 to-indigo-600 mx-auto rounded-full"></div>
+            </div>
+            <div class="flex justify-center">
+                <a href="{{ route('proforma') }}" class="inline-block bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-10 py-5 rounded-2xl font-bold text-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+                    Ir a Proforma
+                </a>
+            </div>
+        </div>
+    </section>
     <!-- Servicios -->
     <section id="servicios" class="py-20 bg-gray-50 dark:bg-gray-800">
         <div class="container mx-auto px-6">
@@ -228,10 +245,9 @@
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+                <!-- Proyectos destacados (los mismos del welcome) -->
                 <div class="group relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500">
-                    <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" 
-                         alt="Proyecto de aluminio" 
-                         class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Proyecto de aluminio" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div class="absolute bottom-4 left-4 text-white">
                             <h4 class="font-semibold">Proyecto de Aluminio</h4>
@@ -240,9 +256,7 @@
                     </div>
                 </div>
                 <div class="group relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500">
-                    <img src="https://images.unsplash.com/photo-1554995207-c18c203602cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" 
-                         alt="Cocina de melamina" 
-                         class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <img src="https://images.unsplash.com/photo-1554995207-c18c203602cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Cocina de melamina" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div class="absolute bottom-4 left-4 text-white">
                             <h4 class="font-semibold">Cocina de Melamina</h4>
@@ -251,9 +265,7 @@
                     </div>
                 </div>
                 <div class="group relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500">
-                    <img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" 
-                         alt="Trabajo en gypsum" 
-                         class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Trabajo en gypsum" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div class="absolute bottom-4 left-4 text-white">
                             <h4 class="font-semibold">Trabajo en Gypsum</h4>
@@ -262,9 +274,7 @@
                     </div>
                 </div>
                 <div class="group relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500">
-                    <img src="https://images.unsplash.com/photo-1634712282287-14ed57b9cc89?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" 
-                         alt="Closet de melamina" 
-                         class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <img src="https://images.unsplash.com/photo-1634712282287-14ed57b9cc89?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Closet de melamina" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div class="absolute bottom-4 left-4 text-white">
                             <h4 class="font-semibold">Closet de Melamina</h4>
@@ -273,9 +283,7 @@
                     </div>
                 </div>
                 <div class="group relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500">
-                    <img src="https://images.unsplash.com/photo-1616137422495-1e9e46e2aa77?ixlib=rb-4.0.3&auto=format&fit=crop&w=934&q=80" 
-                         alt="Cielo raso moderno" 
-                         class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <img src="https://images.unsplash.com/photo-1616137422495-1e9e46e2aa77?ixlib=rb-4.0.3&auto=format&fit=crop&w=934&q=80" alt="Cielo raso moderno" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div class="absolute bottom-4 left-4 text-white">
                             <h4 class="font-semibold">Cielo Raso Moderno</h4>
@@ -284,9 +292,7 @@
                     </div>
                 </div>
                 <div class="group relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500">
-                    <img src="https://images.unsplash.com/photo-1600566753052-dc33b1c7336e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" 
-                         alt="Ventana de aluminio" 
-                         class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <img src="https://images.unsplash.com/photo-1600566753052-dc33b1c7336e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Ventana de aluminio" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div class="absolute bottom-4 left-4 text-white">
                             <h4 class="font-semibold">Ventana de Aluminio</h4>
@@ -294,6 +300,13 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <!-- Botón Ver más -->
+            <div class="flex justify-center mt-8">
+                <a href="{{ route('galeria') }}" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+                    Ver más proyectos
+                </a>
+            </div>
             </div>
         </div>
     </section>

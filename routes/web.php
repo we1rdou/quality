@@ -7,6 +7,11 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+// Ruta para la página de proformas
+Route::get('/proforma', function () {
+    return view('proforma');
+})->name('proforma');
+
 // Rutas para autenticación con Google
 Route::get('/auth/google', [App\Http\Controllers\SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [App\Http\Controllers\SocialAuthController::class, 'handleGoogleCallback']);
@@ -29,6 +34,10 @@ Route::middleware(['auth', 'verified', 'profile.complete', 'account.active'])->g
     Volt::route('settings/password', 'settings.password')->name('settings.password');
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
 
+    // Ruta para la galería extendida
+    Route::get('/galeria', function () {
+         return view('galeria');
+    })->name('galeria');
     // Otras rutas protegidas...
 });
 

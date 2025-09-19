@@ -79,6 +79,7 @@
                         <a href="#nosotros" class="nav-link text-white/90 hover:text-white transition-colors duration-300 font-medium">Nosotros</a>
                         <a href="#servicios" class="nav-link text-white/90 hover:text-white transition-colors duration-300 font-medium">Servicios</a>
                         <a href="#galeria" class="nav-link text-white/90 hover:text-white transition-colors duration-300 font-medium">Galería</a>
+                        <a href="{{ route('proforma') }}" target="_blank" class="nav-link text-white/90 hover:text-white transition-colors duration-300 font-medium bg-gradient-to-r from-green-500 to-blue-500 px-4 py-2 rounded-lg font-semibold ml-2">Proforma</a>
                         <a href="#ubicacion" class="nav-link text-white/90 hover:text-white transition-colors duration-300 font-medium">Ubicación</a>
                         
                         @auth
