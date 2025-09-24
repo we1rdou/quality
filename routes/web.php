@@ -12,6 +12,12 @@ Route::get('/proforma', function () {
     return view('proforma');
 })->name('proforma');
 
+// Ruta para actualizar perfil desde el modal
+Route::put('/perfil', [App\Http\Controllers\PerfilController::class, 'update'])->middleware('auth')->name('perfil.update');
+
+// Ruta para cambio de contraseña desde el modal
+Route::post('/perfil/password', [App\Http\Controllers\PasswordController::class, 'update'])->middleware('auth')->name('perfil.password');
+
 // Rutas para autenticación con Google
 Route::get('/auth/google', [App\Http\Controllers\SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [App\Http\Controllers\SocialAuthController::class, 'handleGoogleCallback']);

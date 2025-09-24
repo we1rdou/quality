@@ -53,7 +53,7 @@ class SocialAuthController extends Controller
 
             // Redirigir según estado de perfil
             if ($needsProfileCompletion) {
-                return redirect()->route('profile.complete');
+                return redirect()->route('home');
             }
 
             return redirect()->intended('/');

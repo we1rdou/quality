@@ -14,14 +14,27 @@ class VerifyEmailController extends Controller
     public function __invoke(EmailVerificationRequest $request): RedirectResponse
     {
         $user = $request->user();
-        $defaultRoute = $user->isAdmin() ? route('admin.dashboard', absolute: false) : route('dashboard', absolute: false);
+        $defaultRoute = route('home');
 
         if ($user->hasVerifiedEmail()) {
-            return redirect()->intended($defaultRoute.'?verified=1');
+            return redirect()->intended($defaultRoute);
         }
 
         $request->fulfill();
 
-        return redirect()->intended($defaultRoute.'?verified=1');
+        return redirect()->intended($defaultRoute);
+    }
+
+    /**
+     * Send the email verification notification.
+     */
+    public function send(): RedirectResponse
+    {
+        $user = request()->user();
+        if ($user->hasVerifiedEmail()) {
+            return back()->with('resent', true);
+        }
+        $user->sendEmailVerificationNotification();
+        return back()->with('resent', true);
     }
 }

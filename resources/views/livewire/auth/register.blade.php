@@ -58,8 +58,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
         Auth::login($user);
 
-        // Redirigir al login después del registro
-        $this->redirect(route('login'), navigate: true);
+    $this->redirectIntended(route('home', absolute: false), navigate: true);
     }
 }; ?>
 
