@@ -220,4 +220,12 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->update(['last_login_at' => now()]);
     }
+
+    /**
+     * Get the proformas for the user.
+     */
+    public function proformas()
+    {
+        return $this->hasMany(Proforma::class);
+    }
 }

@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
+use App\Http\Controllers\WindowController;
+use App\Http\Controllers\ProformaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -60,5 +62,25 @@ Route::middleware(['auth', 'verified', 'profile.complete', 'account.active', 'ad
     // Estadísticas y reportes
     Volt::route('/reports', 'admin.reports')->name('reports');
 });
+
+// Rutas protegidas para listar y mostrar proformas del usuario autenticado
+Route::middleware(['auth'])->group(function () {
+    Route::get('/proformas', [ProformaController::class, 'index'])->name('proformas.index');
+    Route::get('/proformas/{id}', [ProformaController::class, 'show'])->name('proformas.show');
+});
+
+// Rutas protegidas para crear, editar y eliminar ventanas
+Route::middleware(['auth'])->group(function () {
+    Route::get('/windows/create', [WindowController::class, 'create'])->name('windows.create');
+    Route::post('/windows', [WindowController::class, 'store']);
+    Route::get('/windows/{id}/edit', [WindowController::class, 'edit'])->name('windows.edit');
+    Route::put('/windows/{id}', [WindowController::class, 'update'])->name('windows.update');
+    Route::delete('/windows/{id}', [WindowController::class, 'destroy'])->name('windows.destroy');
+});
+
+// Ruta para la página de productos de Aluminio y Vidrio
+Route::get('/productos/aluminio-vidrio', function () {
+    return view('productos.aluminio_vidrio');
+})->name('productos.aluminio_vidrio');
 
 require __DIR__.'/auth.php';
