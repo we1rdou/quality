@@ -16,7 +16,7 @@ class EnsureUserIsAdminOrOwner
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
-        if (! $user || ! in_array($user->role, ['admin', 'owner'])) {
+    if (! $user || $user->role !== 'owner') {
             if ($request->expectsJson()) {
                 return response()->json(['message' => 'Forbidden'], 403);
             }

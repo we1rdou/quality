@@ -115,4 +115,16 @@ return [
         'expire' => 60, // minutos
         'throttle' => 6, // número máximo de envíos
     ],
+    /*
+    |--------------------------------------------------------------------------
+    | Middleware Aliases
+    |--------------------------------------------------------------------------
+    |
+    | Aquí puedes registrar aliases para tus middlewares personalizados.
+    | Ejemplo: 'owner' => App\Http\Middleware\EnsureUserIsAdminOrOwner::class
+    */
+    'middleware' => [
+        'owner' => App\Http\Middleware\EnsureUserIsAdminOrOwner::class,
+        // Agrega más aliases aquí si lo necesitas
+    ],
 ];

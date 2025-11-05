@@ -259,6 +259,7 @@
                                             @endif
                                         @endif
                                         
+
                                         @if(!$user->email_verified_at)
                                             <!-- Verificar email -->
                                                 <button class="text-purple-600 hover:text-purple-800 transition-colors user-action-btn" 
@@ -270,6 +271,49 @@
                                                 </svg>
                                             </button>
                                         @endif
+
+                                        @if(auth()->user()->role === 'owner' && $user->role === 'client')
+                                            <!-- Enviar datos bancarios (con confirmación) -->
+                                            <button class="text-indigo-600 hover:text-indigo-800 transition-colors user-action-btn"
+                                                    title="Enviar datos bancarios al cliente"
+                                                    wire:click="openBankDataModal({{ $user->id }})">
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                                                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                                                </svg>
+                                            </button>
+                                        @endif
+    {{-- Modal de confirmación para enviar datos bancarios --}}
+    @if ($showBankDataModal && $bankDataTarget)
+        <div class="fixed inset-0 z-50">
+            <div class="absolute inset-0 bg-black bg-opacity-50 z-50"></div>
+            <div class="flex items-center justify-center min-h-screen absolute inset-0 z-60">
+                <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 transform transition-all">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884zM18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-800 mb-1">Confirmar envío de datos bancarios</h3>
+                                <div class="text-slate-600">Usuario: <span class="text-slate-800 font-semibold">{{ $bankDataTarget->name }}</span></div>
+                                <div class="text-slate-500 text-sm mt-1"><strong>Email:</strong> {{ $bankDataTarget->email }}</div>
+                            </div>
+                        </div>
+                        <div class="mb-6 text-slate-700 text-sm">
+                            ¿Estás seguro que deseas enviar tus datos bancarios a este usuario?
+                        </div>
+                        <div class="flex space-x-3">
+                            <button type="button" class="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors" wire:click="closeBankDataModal">Cancelar</button>
+                            <button type="button" class="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-lg" wire:click="confirmSendBankData">Enviar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
                                         
                                         @if(!$user->isAdmin() || (\App\Models\User::where('role', 'admin')->count() > 1))
                                             <!-- Eliminar (solo si no es el único admin) -->

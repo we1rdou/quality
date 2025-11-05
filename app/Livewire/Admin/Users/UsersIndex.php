@@ -1,6 +1,5 @@
 <?php
-
-namespace App\Livewire\Admin\Users;
+    namespace App\Livewire\Admin\Users;
 
 use App\Models\User;
 use Livewire\Component;
@@ -10,6 +9,45 @@ use Carbon\Carbon;
 
 class UsersIndex extends Component
 {
+    use WithPagination;
+
+    public bool $showBankDataModal = false;
+    public ?User $bankDataTarget = null;
+
+    public function openBankDataModal($userId)
+    {
+        $user = User::find($userId);
+        if ($user && $user->role === 'client') {
+            $this->bankDataTarget = $user;
+            $this->showBankDataModal = true;
+        }
+    }
+
+    public function closeBankDataModal()
+    {
+        $this->showBankDataModal = false;
+        $this->bankDataTarget = null;
+    }
+
+    public function confirmSendBankData()
+    {
+        $owner = auth()->user();
+        $client = $this->bankDataTarget;
+        if ($owner->role !== 'owner' || !$client || $client->role !== 'client') {
+            session()->flash('error', 'Solo el owner puede enviar datos bancarios a clientes.');
+            $this->closeBankDataModal();
+            return;
+        }
+        $bankAccount = $owner->bankAccount;
+        if (!$bankAccount) {
+            session()->flash('error', 'No tienes datos bancarios registrados.');
+            $this->closeBankDataModal();
+            return;
+        }
+        $client->notify(new \App\Notifications\BankAccountDataNotification($bankAccount, $owner));
+        session()->flash('message', 'Datos bancarios enviados correctamente a ' . $client->email);
+        $this->closeBankDataModal();
+    }
     use WithPagination;
 
     public string $search = '';

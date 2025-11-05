@@ -24,7 +24,6 @@
         $recentUsers = collect();
     }
 @endphp
-<!-- Encabezado de bienvenida Admin -->
 <div class="fade-in mb-8">
     <div class="glass-card rounded-2xl shadow-2xl p-8">
         <div class="flex items-center justify-between flex-wrap gap-6">
@@ -50,6 +49,13 @@
                         <p class="text-lg text-slate-600">
                             Bienvenido, {{ auth()->user()->name }}
                         </p>
+                        @if($userRole === 'owner')
+                        <div class="mt-4">
+                            <button onclick="window.dispatchEvent(new CustomEvent('open-bank-account-modal'))" type="button" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-semibold">
+                                Configurar cuenta bancaria
+                            </button>
+                        </div>
+                        @endif
                     </div>
                 </div>
                 <div class="flex items-center text-slate-600">
@@ -297,4 +303,7 @@
                     </div>
                 </div>
             </div>
+    @if(auth()->user()->role === 'owner')
+        <livewire:owner.bank-account-form-modal />
+    @endif
 @endsection

@@ -1,4 +1,10 @@
+
 <?php
+
+// Ruta para formulario de cuenta bancaria del owner
+Route::middleware(['auth', 'verified', 'account.active', 'owner'])
+    // Eliminada ruta antigua de formulario clásico de cuenta bancaria
+    ->name('owner.bank-account');
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;

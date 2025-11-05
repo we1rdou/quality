@@ -14,6 +14,13 @@ use Illuminate\Support\Str;
 class User extends Authenticatable
 {
     /**
+     * Relación uno a uno con la cuenta bancaria
+     */
+    public function bankAccount()
+    {
+        return $this->hasOne(BankAccount::class);
+    }
+    /**
      * Check if user has admin access (admin, owner, seller)
      */
     public function hasAdminAccess(): bool
