@@ -10,7 +10,8 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     libzip-dev \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+    libpq-dev \
+    && docker-php-ext-install pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd zip
 
 # Instalar Node.js y NPM (para compilar assets)
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
