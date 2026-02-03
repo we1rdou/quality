@@ -62,9 +62,9 @@ Para asegurarnos de que Vite compile los assets y las migraciones corran:
 
 4.  **Start Command:**
     ```bash
-    php artisan migrate --force && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan serve --host=0.0.0.0 --port=$PORT
+    php artisan migrate --force && php artisan db:seed --force && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan serve --host=0.0.0.0 --port=$PORT
     ```
-    *(Esto corre las migraciones de base de datos automáticamente en cada deploy y luego inicia el servidor)*
+    *(Nota: `db:seed` correrá en cada deploy. Asegúrate de que tus seeders no dupliquen datos si ya existen)*
 
 ## 6. Generar Dominio Público
 1.  Ve a la pestaña **Settings**.
