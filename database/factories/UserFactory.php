@@ -26,19 +26,19 @@ class UserFactory extends Factory
     {
         $provinces = config('ecuador.provinces');
         $provinceKeys = array_keys($provinces);
-        $selectedProvince = fake()->randomElement($provinceKeys);
+        $selectedProvince = $this->faker->randomElement($provinceKeys);
         $cities = $provinces[$selectedProvince];
 
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+            'name' => $this->faker->name(),
+            'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
-            'phone' => fake()->phoneNumber(),
-            'address' => fake()->address(),
+            'phone' => $this->faker->phoneNumber(),
+            'address' => $this->faker->address(),
             'province' => $selectedProvince,
-            'city' => fake()->randomElement($cities),
+            'city' => $this->faker->randomElement($cities),
             'role' => User::ROLE_CLIENT, // Por defecto es cliente
         ];
     }
