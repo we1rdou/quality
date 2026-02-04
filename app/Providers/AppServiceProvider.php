@@ -23,6 +23,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+
+        if (config('app.env') === 'production') {
+            URL::forceScheme('https');
+        }
         // Registrar middleware para admin y owner
         $router = app('router');
         $router->aliasMiddleware('admin.seller', function ($request, $next) {
